@@ -1,0 +1,41 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+   config.vm.box = "bertvv/centos72"
+   config.vm.provider "virtualbox" do |vb|
+     vb.gui = true
+     vb.memory = "512"
+   end
+   
+   config.vm.define "vm1" do |vm1|
+	vm1.vm.hostname = "vm1"
+	vm1.vm.network "private_network", ip: "172.28.128.4", netmask: "255.255.255.0" 
+   end
+	
+   config.vm.define "vm2" do |vm2|
+	vm2.vm.hostname = "vm2"
+	vm2.vm.network "private_network", ip: "172.28.128.5", netmask: "255.255.255.0" 
+	vm2.vm.provision "shell", 
+    inline: <<-SHELL
+    yum install git -y
+    cd ~vagrant
+    mkdir task2
+    cd task2
+	git init
+    git clone https://github.com/EugeneParkhomenko/vagrant.git
+	git checkout task2
+	cat vagrant/result
+    SHELL
+   end
+	
+   config.vm.provision "shell", 
+   inline: <<-SHELL
+   yum install mc -y
+   grep 'dns' /etc/hosts || echo '172.28.128.4 vm1' >> /etc/hosts
+   grep 'dns' /etc/hosts || echo '172.28.128.5 vm2' >> /etc/hosts
+   SHELL
+end
+ 
+
+
