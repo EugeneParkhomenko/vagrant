@@ -22,9 +22,10 @@ Vagrant.configure("2") do |config|
     cd ~vagrant
     mkdir task2
     cd task2
-    sudo git clone https://github.com/EugeneParkhomenko/vagrant.git
-    cd vagrant
-    cat result
+	git init
+    git clone https://github.com/EugeneParkhomenko/vagrant.git
+	git checkout task2
+	cat vagrant/result
     SHELL
    end
 	
